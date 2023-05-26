@@ -1,4 +1,9 @@
 import pytest
+from PyQt5 import QtCore
+from PyQt5.Qt import QApplication
+from PyQt5.QtTest import QTest
+from PyQt5.QtWidgets import QFileDialog, QDialogButtonBox
+
 from qt.settings import SettingsWindow
 
 

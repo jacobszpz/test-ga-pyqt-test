@@ -1,4 +1,7 @@
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import (QMenu, QStyle, QAction, QDialog, QWidget, QWizard,
+                             QCompleter, QFileDialog, QMessageBox,
+                             QApplication, QSystemTrayIcon)
+
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon, QPixmap
 from pathlib import Path
