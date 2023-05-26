@@ -29,6 +29,8 @@ from PyQt5 import uic
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt, QUrl, pyqtSlot, pyqtSignal
 from PyQt5.QtNetwork import QNetworkCookie
+from PyQt5.QtWebEngineCore import QWebEngineCookieStore
+from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineProfile
 from PyQt5.QtWidgets import (QMenu, QStyle, QAction, QDialog, QWidget, QWizard,
                              QCompleter, QFileDialog, QMessageBox,
                              QApplication, QSystemTrayIcon)
