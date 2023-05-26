@@ -91,157 +91,157 @@ class OSUtils:
         else:
             subprocess.Popen(["xdg-open", dir_to_open])
 
-class SyncTrayMenu(QMenu):
-    """`QMenu` associated with app system tray icon."""
-
-    _unauthenticated_status = "You haven't logged in"
-
-    def __init__(self, logged_in: bool = False, last_synced: str = ""):
-        """Create the menu for a `SyncTrayIcon`.
-
-        :param bool logged_in: Whether user is currently logged in.
-        :param str last_synced: Last sync time shown.
-        """
-        super().__init__()
-        self._last_synced = ""
-
-        self._init_ui()
-        self.update_last_synced(last_synced)
-        self.set_logged_in(logged_in)
-
-    def _init_ui(self) -> None:
-        sync_icon = QApplication.style().standardIcon(QStyle.SP_BrowserReload)
-        close_icon = QApplication.style().standardIcon(QStyle.SP_DialogCloseButton)
-        open_dir_icon = QApplication.style().standardIcon(QStyle.SP_DirOpenIcon)
-
-        self.refresh = QAction("Sync now")
-        self.refresh.setIcon(sync_icon)
-        self.addAction(self.refresh)
-
-        self.open_dir = QAction("Open downloads")
-        self.open_dir.setIcon(open_dir_icon)
-        self.addAction(self.open_dir)
-
-        self.preferences = QAction("Preferences")
-        self.addAction(self.preferences)
-
-        self.addSeparator()
-
-        self._status = QAction(self._unauthenticated_status)
-        self._status.setEnabled(False)
-        self.addAction(self._status)
-
-        self.log_in = QAction("Log In")
-        self.addAction(self.log_in)
-
-        self.quit = QAction("Quit")
-        self.quit.setIcon(close_icon)
-        self.addAction(self.quit)
-
-    def set_logged_in(self, logged: bool) -> None:
-        """Set the UI to reflect logged-in status."""
-        self.refresh.setVisible(logged)
-        self.preferences.setVisible(logged)
-        self.open_dir.setVisible(logged)
-        self.log_in.setVisible(not logged)
-
-        if logged:
-            self._status.setText(f"Last Synced: {self._last_synced}")
-        else:
-            self._status.setText("Not Logged In")
-
-    def update_last_synced(self, last: str) -> None:
-        """Update the time of last download shown to user."""
-        self._last_synced = last
-        self._status.setText(f"Last Synced: {self._last_synced}")
-
-    def toggle_currently_syncing(self, syncing: bool) -> None:
-        """Toggle the currently syncing indicator."""
-        self.refresh.setEnabled(not syncing)
-
-        if syncing:
-            self._status.setText("Syncing...")
-
-
-class SyncTrayIcon(QSystemTrayIcon):
-    """BlackboardSync system tray icon."""
-
-    _tooltip = "Blackboard Sync"
-    _sync_signal = pyqtSignal()
-    _login_signal = pyqtSignal()
-    _settings_signal = pyqtSignal()
-    _quit_signal = pyqtSignal()
-    _open_dir_signal = pyqtSignal()
-    _show_menu_signal = pyqtSignal()
-
-    def __init__(self):
-        """Create a `QSystemTrayIcon`."""
-        super().__init__()
-        self._init_ui()
-
-    def _init_ui(self) -> None:
-        # Create the icon
-        icon = Assets.icon
-
-        # Create the tray
-        self.setIcon(icon)
-        self.setVisible(True)
-
-        # Create the menu
-        self._menu = SyncTrayMenu()
-
-        self._sync_signal = self._menu.refresh.triggered
-        self._login_signal = self._menu.log_in.triggered
-        self._settings_signal = self._menu.preferences.triggered
-        self._quit_signal = self._menu.quit.triggered
-        self._open_dir_signal = self._menu.open_dir.triggered
-        self._show_menu_signal = self._menu.aboutToShow
-
-        # Add the menu to the tray
-        self.setContextMenu(self._menu)
-        self.setToolTip(self._tooltip)
-
-    def set_logged_in(self, logged: bool) -> None:
-        """Set logged-in status in menu."""
-        self._menu.set_logged_in(logged)
-
-    def update_last_synced(self, last: str) -> None:
-        """Update last sync time in menu."""
-        self._menu.update_last_synced(last)
-
-    def toggle_currently_syncing(self, syncing: bool) -> None:
-        """Toggle currently syncing indicator in menu."""
-        self._menu.toggle_currently_syncing(syncing)
-
-    @property
-    def sync_signal(self):
-        """Fire if user forces sync."""
-        return self._sync_signal
-
-    @property
-    def login_signal(self):
-        """Fire once user is authenticated."""
-        return self._login_signal
-
-    @property
-    def settings_signal(self):
-        """Fire when the settings menu is opened."""
-        return self._settings_signal
-
-    @property
-    def quit_signal(self):
-        """Fire once user decides to quit app."""
-        return self._quit_signal
-
-    @property
-    def open_dir_signal(self):
-        """Fire once user wants to open download directory."""
-        return self._open_dir_signal
-
-    @property
-    def show_menu_signal(self):
-        """Fire when menu is about to be shown."""
-        return self._show_menu_signal
+#class SyncTrayMenu(QMenu):
+#    """`QMenu` associated with app system tray icon."""
+#
+#    _unauthenticated_status = "You haven't logged in"
+#
+#    def __init__(self, logged_in: bool = False, last_synced: str = ""):
+#        """Create the menu for a `SyncTrayIcon`.
+#
+#        :param bool logged_in: Whether user is currently logged in.
+#        :param str last_synced: Last sync time shown.
+#        """
+#        super().__init__()
+#        self._last_synced = ""
+#
+#        self._init_ui()
+#        self.update_last_synced(last_synced)
+#        self.set_logged_in(logged_in)
+#
+#    def _init_ui(self) -> None:
+#        sync_icon = QApplication.style().standardIcon(QStyle.SP_BrowserReload)
+#        close_icon = QApplication.style().standardIcon(QStyle.SP_DialogCloseButton)
+#        open_dir_icon = QApplication.style().standardIcon(QStyle.SP_DirOpenIcon)
+#
+#        self.refresh = QAction("Sync now")
+#        self.refresh.setIcon(sync_icon)
+#        self.addAction(self.refresh)
+#
+#        self.open_dir = QAction("Open downloads")
+#        self.open_dir.setIcon(open_dir_icon)
+#        self.addAction(self.open_dir)
+#
+#        self.preferences = QAction("Preferences")
+#        self.addAction(self.preferences)
+#
+#        self.addSeparator()
+#
+#        self._status = QAction(self._unauthenticated_status)
+#        self._status.setEnabled(False)
+#        self.addAction(self._status)
+#
+#        self.log_in = QAction("Log In")
+#        self.addAction(self.log_in)
+#
+#        self.quit = QAction("Quit")
+#        self.quit.setIcon(close_icon)
+#        self.addAction(self.quit)
+#
+#    def set_logged_in(self, logged: bool) -> None:
+#        """Set the UI to reflect logged-in status."""
+#        self.refresh.setVisible(logged)
+#        self.preferences.setVisible(logged)
+#        self.open_dir.setVisible(logged)
+#        self.log_in.setVisible(not logged)
+#
+#        if logged:
+#            self._status.setText(f"Last Synced: {self._last_synced}")
+#        else:
+#            self._status.setText("Not Logged In")
+#
+#    def update_last_synced(self, last: str) -> None:
+#        """Update the time of last download shown to user."""
+#        self._last_synced = last
+#        self._status.setText(f"Last Synced: {self._last_synced}")
+#
+#    def toggle_currently_syncing(self, syncing: bool) -> None:
+#        """Toggle the currently syncing indicator."""
+#        self.refresh.setEnabled(not syncing)
+#
+#        if syncing:
+#            self._status.setText("Syncing...")
+#
+#
+#class SyncTrayIcon(QSystemTrayIcon):
+#    """BlackboardSync system tray icon."""
+#
+#    _tooltip = "Blackboard Sync"
+#    _sync_signal = pyqtSignal()
+#    _login_signal = pyqtSignal()
+#    _settings_signal = pyqtSignal()
+#    _quit_signal = pyqtSignal()
+#    _open_dir_signal = pyqtSignal()
+#    _show_menu_signal = pyqtSignal()
+#
+#    def __init__(self):
+#        """Create a `QSystemTrayIcon`."""
+#        super().__init__()
+#        self._init_ui()
+#
+#    def _init_ui(self) -> None:
+#        # Create the icon
+#        icon = Assets.icon
+#
+#        # Create the tray
+#        self.setIcon(icon)
+#        self.setVisible(True)
+#
+#        # Create the menu
+#        self._menu = SyncTrayMenu()
+#
+#        self._sync_signal = self._menu.refresh.triggered
+#        self._login_signal = self._menu.log_in.triggered
+#        self._settings_signal = self._menu.preferences.triggered
+#        self._quit_signal = self._menu.quit.triggered
+#        self._open_dir_signal = self._menu.open_dir.triggered
+#        self._show_menu_signal = self._menu.aboutToShow
+#
+#        # Add the menu to the tray
+#        self.setContextMenu(self._menu)
+#        self.setToolTip(self._tooltip)
+#
+#    def set_logged_in(self, logged: bool) -> None:
+#        """Set logged-in status in menu."""
+#        self._menu.set_logged_in(logged)
+#
+#    def update_last_synced(self, last: str) -> None:
+#        """Update last sync time in menu."""
+#        self._menu.update_last_synced(last)
+#
+#    def toggle_currently_syncing(self, syncing: bool) -> None:
+#        """Toggle currently syncing indicator in menu."""
+#        self._menu.toggle_currently_syncing(syncing)
+#
+#    @property
+#    def sync_signal(self):
+#        """Fire if user forces sync."""
+#        return self._sync_signal
+#
+#    @property
+#    def login_signal(self):
+#        """Fire once user is authenticated."""
+#        return self._login_signal
+#
+#    @property
+#    def settings_signal(self):
+#        """Fire when the settings menu is opened."""
+#        return self._settings_signal
+#
+#    @property
+#    def quit_signal(self):
+#        """Fire once user decides to quit app."""
+#        return self._quit_signal
+#
+#    @property
+#    def open_dir_signal(self):
+#        """Fire once user wants to open download directory."""
+#        return self._open_dir_signal
+#
+#    @property
+#    def show_menu_signal(self):
+#        """Fire when menu is about to be shown."""
+#        return self._show_menu_signal
 
 
 class RedownloadDialog(QMessageBox):
