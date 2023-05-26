@@ -33,8 +33,6 @@ from PyQt5.QtWidgets import (QMenu, QStyle, QAction, QDialog, QWidget, QWizard,
                              QCompleter, QFileDialog, QMessageBox,
                              QApplication, QSystemTrayIcon)
 from requests.cookies import RequestsCookieJar
-from PyQt5.QtWebEngineCore import QWebEngineCookieStore
-from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineProfile
 
 
 class SyncPeriod(IntEnum):
@@ -405,80 +403,80 @@ class SettingsWindow(QWidget):
         return self._save_signal
 
 
-class LoginWindow(QWidget):
-    """Deprecated widget previously used to login."""
-
-
-class LoginWebView(QWidget):
-    """Blackboard login widget."""
-
-    _login_complete_signal = pyqtSignal()
-
-    def __init__(self, start_url: str, target_url: str):
-        """Create instance of LoginWebView."""
-        super().__init__()
-        self.start_url = start_url
-        self.target_url = target_url
-
-        self._init_ui()
-        self._cookie_jar = RequestsCookieJar()
-
-    def _init_ui(self) -> None:
-        Assets.load_ui(self)
-        self.web_view.load(QUrl.fromUserInput(self.start_url))
-        self.web_view.loadFinished.connect(self._page_load_handler)
-        self._cookie_store.cookieAdded.connect(self._cookie_added_handler)
-
-    def _page_load_handler(self) -> None:
-        if self.url.startswith(self.target_url):
-            self._login_complete_signal.emit()
-
-    def _cookie_added_handler(self, cookie: QNetworkCookie) -> None:
-        self._cookie_jar.set(
-            cookie.name().data().decode(),
-            cookie.value().data().decode(),
-            domain=cookie.domain(),
-            path=cookie.path(),
-            secure=cookie.isSecure()
-        )
-
-    def restore(self) -> None:
-        self.clear_cookie_store()
-        self.web_view.load(QUrl.fromUserInput(self.start_url))
-
-    def clear_cookie_store(self) -> None:
-        """Clear the HTTP cache and cookies."""
-        self._cookie_store.deleteAllCookies()
-        self._engine_profile.clearHttpCache()
-
-    @property
-    def url(self) -> str:
-        """URL of current website."""
-        return self.web_view.url().toString()
-
-    @property
-    def cookie_jar(self) -> RequestsCookieJar:
-        """Contains session cookies of the current session."""
-        return self._cookie_jar
-
-    @property
-    def _engine_page(self) -> QWebEnginePage:
-        return self.web_view.page()
-
-    @property
-    def _engine_profile(self) -> QWebEngineProfile:
-        return self._engine_page.profile()
-
-    @property
-    def _cookie_store(self) -> QWebEngineCookieStore:
-        return self._engine_profile.cookieStore()
-
-    @property
-    def login_complete_signal(self):
-        """Fire when the login flow has completed."""
-        return self._login_complete_signal
-
-
+#class LoginWindow(QWidget):
+#    """Deprecated widget previously used to login."""
+#
+#
+#class LoginWebView(QWidget):
+#    """Blackboard login widget."""
+#
+#    _login_complete_signal = pyqtSignal()
+#
+#    def __init__(self, start_url: str, target_url: str):
+#        """Create instance of LoginWebView."""
+#        super().__init__()
+#        self.start_url = start_url
+#        self.target_url = target_url
+#
+#        self._init_ui()
+#        self._cookie_jar = RequestsCookieJar()
+#
+#    def _init_ui(self) -> None:
+#        Assets.load_ui(self)
+#        self.web_view.load(QUrl.fromUserInput(self.start_url))
+#        self.web_view.loadFinished.connect(self._page_load_handler)
+#        self._cookie_store.cookieAdded.connect(self._cookie_added_handler)
+#
+#    def _page_load_handler(self) -> None:
+#        if self.url.startswith(self.target_url):
+#            self._login_complete_signal.emit()
+#
+#    def _cookie_added_handler(self, cookie: QNetworkCookie) -> None:
+#        self._cookie_jar.set(
+#            cookie.name().data().decode(),
+#            cookie.value().data().decode(),
+#            domain=cookie.domain(),
+#            path=cookie.path(),
+#            secure=cookie.isSecure()
+#        )
+#
+#    def restore(self) -> None:
+#        self.clear_cookie_store()
+#        self.web_view.load(QUrl.fromUserInput(self.start_url))
+#
+#    def clear_cookie_store(self) -> None:
+#        """Clear the HTTP cache and cookies."""
+#        self._cookie_store.deleteAllCookies()
+#        self._engine_profile.clearHttpCache()
+#
+#    @property
+#    def url(self) -> str:
+#        """URL of current website."""
+#        return self.web_view.url().toString()
+#
+#    @property
+#    def cookie_jar(self) -> RequestsCookieJar:
+#        """Contains session cookies of the current session."""
+#        return self._cookie_jar
+#
+#    @property
+#    def _engine_page(self) -> QWebEnginePage:
+#        return self.web_view.page()
+#
+#    @property
+#    def _engine_profile(self) -> QWebEngineProfile:
+#        return self._engine_page.profile()
+#
+#    @property
+#    def _cookie_store(self) -> QWebEngineCookieStore:
+#        return self._engine_profile.cookieStore()
+#
+#    @property
+#    def login_complete_signal(self):
+#        """Fire when the login flow has completed."""
+#        return self._login_complete_signal
+#
+#
 class SetupWizard(QWizard):
     """Initial setup wizard."""
 
