@@ -4,10 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pytest = "*"
 pyqt5 = "*"
-pytest-qt = "*"
-requests = "*"
 pyqtwebengine = "*"
 
 [dev-packages]
