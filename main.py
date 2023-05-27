@@ -6,7 +6,6 @@ import atexit
 
 
 def test_terminate(proc):
-    time.sleep(12)
     proc.terminate()
 
 
