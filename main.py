@@ -4,13 +4,8 @@ import time
 import subprocess
 import atexit
 
-
-def test_terminate(proc):
-    proc.terminate()
-
-
 proc = subprocess.Popen(["Xvfb", ":42"])
-atexit.register(test_terminate, proc)
+atexit.register(proc.terminate)
 
 from PyQt5.QtWebEngineWidgets import QWebEnginePage
 from PyQt5.QtWidgets import QWidget, QApplication
